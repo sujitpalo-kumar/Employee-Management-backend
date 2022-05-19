@@ -1,22 +1,30 @@
-const express = require ('express')
-const app = express()
-const cors = require('cors')
-const mongoose = require('mongoose')
-const dotenv = require('dotenv')
-const apiRoutes = require('./route/route')
+const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const cors = require("cors");
 
-app.use(express.json(),cors())
-port = 8080;
+const routes = require("./routes/routes");
 
-app.use('/app/user', apiRoutes)
-
+const app = express();
 dotenv.config();
 
+app.get("/", (req, res) => {
+  res.send("App running");
+});
 
-mongoose.connect(process.env.DB_CONNECT, {useNewUrlParser: true})
-.then(() => {console.log('Database is Connected')})
-.catch(err => console.log(err))
+const port = 8080;
 
-app.listen(port, ()=>{
-    console.log(`server is running at http://localhost:${port}`)
-})
+app.listen(port, () => {
+  console.log(`App running on port ${port}`);
+});
+
+mongoose
+  .connect(process.env.DB_CONNECT, { useNewUrlParser: true })
+  .then(() => {
+    console.log("Database connected");
+  })
+  .catch((error) => console.log(error));
+
+app.use(express.json(), cors());
+
+app.use("/", routes);
